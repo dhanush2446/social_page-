@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap');
+
+/* ═══════════════════════════════════════════════
+   NEBULA DESIGN SYSTEM — Cosmic Social Experience
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --void: #06060e;
+  --deep: #0b0b19;
+  --cosmos: #101027;
+  --nebula: #171738;
+  --stardust: #1f1f4e;
+  --glass: rgba(16, 16, 39, 0.65);
+  --glass-border: rgba(139, 92, 246, 0.12);
+  --glass-shine: rgba(255, 255, 255, 0.04);
+
+  --text-star: #f0f0ff;
+  --text-moon: #b8b8d4;
+  --text-dust: #6e6e9a;
+  --text-void: #3d3d6b;
+
+  --neon-violet: #8b5cf6;
+  --neon-pink: #ec4899;
+  --neon-cyan: #22d3ee;
+  --neon-lime: #a3e635;
+  --neon-amber: #fbbf24;
+  --neon-red: #f43f5e;
+
+  --glow-violet: 0 0 20px rgba(139, 92, 246, 0.25), 0 0 60px rgba(139, 92, 246, 0.08);
+  --glow-pink: 0 0 20px rgba(236, 72, 153, 0.2), 0 0 60px rgba(236, 72, 153, 0.06);
+  --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.2);
+
+  --grad-nebula: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #22d3ee 100%);
+  --grad-sunset: linear-gradient(135deg, #f43f5e 0%, #fbbf24 100%);
+  --grad-ocean: linear-gradient(135deg, #22d3ee 0%, #8b5cf6 100%);
+  --grad-aurora: linear-gradient(135deg, #a3e635 0%, #22d3ee 50%, #8b5cf6 100%);
+
+  --radius-s: 8px;
+  --radius-m: 14px;
+  --radius-l: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 100px;
+}
+
+/* Light mode overrides */
+[data-theme='light'] {
+  --void: #f4f2ff;
+  --deep: #ece9ff;
+  --cosmos: #ffffff;
+  --nebula: #f8f7ff;
+  --stardust: #eeecff;
+  --glass: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(139, 92, 246, 0.15);
+  --glass-shine: rgba(139, 92, 246, 0.03);
+
+  --text-star: #1a1040;
+  --text-moon: #4a4578;
+  --text-dust: #8b86b0;
+  --text-void: #c4c0de;
+
+  --glow-violet: 0 4px 24px rgba(139, 92, 246, 0.12);
+  --glow-pink: 0 4px 24px rgba(236, 72, 153, 0.1);
+  --glow-cyan: 0 4px 24px rgba(34, 211, 238, 0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--void);
+  color: var(--text-moon);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.6s ease, color 0.4s ease;
+}
+
+/* Cosmic background particles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background:
+    radial-gradient(1.5px 1.5px at 10% 20%, rgba(139, 92, 246, 0.4), transparent),
+    radial-gradient(1px 1px at 25% 55%, rgba(236, 72, 153, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 40% 80%, rgba(34, 211, 238, 0.35), transparent),
+    radial-gradient(1px 1px at 55% 15%, rgba(163, 230, 53, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 70% 45%, rgba(139, 92, 246, 0.3), transparent),
+    radial-gradient(1px 1px at 85% 75%, rgba(251, 191, 36, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 15% 90%, rgba(34, 211, 238, 0.3), transparent),
+    radial-gradient(1px 1px at 90% 30%, rgba(236, 72, 153, 0.25), transparent),
+    radial-gradient(1px 1px at 50% 50%, rgba(139, 92, 246, 0.2), transparent),
+    radial-gradient(1.5px 1.5px at 65% 65%, rgba(244, 63, 94, 0.25), transparent),
+    radial-gradient(1px 1px at 30% 35%, rgba(34, 211, 238, 0.2), transparent),
+    radial-gradient(1px 1px at 75% 90%, rgba(163, 230, 53, 0.2), transparent);
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 30s linear infinite;
+}
+
+[data-theme='light'] body::before {
+  opacity: 0.3;
+}
+
+@keyframes drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-30px); }
+}
+
+/* Ambient nebula blobs */
+body::after {
+  content: '';
+  position: fixed;
+  width: 100vw; height: 100vh;
+  top: 0; left: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 15% 25%, rgba(139, 92, 246, 0.07), transparent),
+    radial-gradient(ellipse 500px 500px at 85% 70%, rgba(236, 72, 153, 0.05), transparent),
+    radial-gradient(ellipse 400px 300px at 50% 90%, rgba(34, 211, 238, 0.04), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+a { text-decoration: none; color: var(--neon-violet); transition: all 0.3s; }
+a:hover { color: var(--neon-cyan); text-shadow: var(--glow-cyan); }
+
+button {
+  cursor: pointer; border: none; font-family: inherit;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+button:active { transform: scale(0.95); }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--neon-violet); border-radius: 10px; opacity: 0.5; }
+
+/* ═══ Animations ═══ */
+@keyframes emerge {
+  0% { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes border-dance {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  15% { transform: scale(1.35) rotate(-5deg); }
+  30% { transform: scale(0.95); }
+  45% { transform: scale(1.15) rotate(3deg); }
+  60% { transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -400% 0; }
+  100% { background-position: 400% 0; }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes slide-reveal {
+  from { opacity: 0; max-height: 0; transform: translateY(-8px); }
+  to { opacity: 1; max-height: 600px; transform: translateY(0); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Utility */
+.app-container {
+  display: flex; flex-direction: column; min-height: 100vh;
+  padding-bottom: 80px; position: relative; z-index: 1;
+}
+.main-content {
+  flex: 1; max-width: 580px; margin: 0 auto; width: 100%; padding: 16px;
+  position: relative; z-index: 1;
+}
+
+/* ── Responsive Scaling ── */
+@media (max-width: 768px) {
+  body { font-size: 14px; }
+  .main-content { max-width: 100%; padding: 12px; }
+}
