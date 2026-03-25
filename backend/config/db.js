@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        const uri = process.env.MONGO_URI;
+        const uri = process.env.MONGO_URI || process.env.MONGO_URL;
 
         if (!uri) {
-            console.error('MONGO_URL is not defined in .env');
+            console.error('Neither MONGO_URI nor MONGO_URL is defined in Render Environment Variables!');
             process.exit(1);
         }
 
