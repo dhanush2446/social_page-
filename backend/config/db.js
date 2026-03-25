@@ -5,8 +5,7 @@ const connectDB = async () => {
         const uri = process.env.MONGO_URI || process.env.MONGO_URL;
 
         if (!uri) {
-            console.error('Neither MONGO_URI nor MONGO_URL is defined in Render Environment Variables!');
-            process.exit(1);
+            throw new Error('CRITICAL FATAL: You definitely did NOT add MONGO_URI to the Render Environment Variables tab! It is completely missing!');
         }
 
         const conn = await mongoose.connect(uri);
