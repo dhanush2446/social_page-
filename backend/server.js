@@ -29,6 +29,9 @@ if (process.env.NODE_ENV !== 'test') {
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
+    }).catch(err => {
+        console.log("FATAL MONGODB ERROR:", err.message);
+        setTimeout(() => process.exit(1), 1000);
     });
 }
 
