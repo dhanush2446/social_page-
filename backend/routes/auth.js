@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { protect } = require('../middleware/auth');
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET || 'secret', {
@@ -37,6 +38,9 @@ router.post('/signup', async (req, res) => {
                 following: user.following,
                 followersCount: user.followersCount || 0,
                 followingCount: user.followingCount || 0,
+                stars: user.stars || 60,
+                money: user.money || 0,
+                notifications: user.notifications || [],
                 token: generateToken(user._id),
             });
         } else {
@@ -62,6 +66,9 @@ router.post('/login', async (req, res) => {
                 following: user.following,
                 followersCount: user.followersCount || 0,
                 followingCount: user.followingCount || 0,
+                stars: user.stars || 60,
+                money: user.money || 0,
+                notifications: user.notifications || [],
                 token: generateToken(user._id),
             });
         } else {

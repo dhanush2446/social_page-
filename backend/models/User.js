@@ -11,6 +11,14 @@ const userSchema = new mongoose.Schema({
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     followersCount: { type: Number, default: 0 },
     followingCount: { type: Number, default: 0 },
+    stars: { type: Number, default: 60 },
+    money: { type: Number, default: 0.00 },
+    notifications: [{
+        message: { type: String },
+        type: { type: String, enum: ['follow', 'info', 'reward', 'system'], default: 'info' },
+        read: { type: Boolean, default: false },
+        createdAt: { type: Date, default: Date.now }
+    }],
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {

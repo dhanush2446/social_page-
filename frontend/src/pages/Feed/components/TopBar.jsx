@@ -1,6 +1,8 @@
 import { Bell, Moon, Sun, LogOut, Search } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import { useAuth } from '../../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const getAvatarGradient = (name) => {
     const gradients = [
@@ -18,7 +20,14 @@ const getAvatarGradient = (name) => {
 
 const TopBar = () => {
     const { theme, toggleTheme } = useTheme();
-    const { user, logout } = useAuth();
+    const { user, logout, refreshUser } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        refreshUser();
+    }, []);
+
+    const hasUnread = user?.notifications?.some(n => !n.read) || false;
 
     return (
         <div className="top-bar-container">
@@ -26,13 +35,18 @@ const TopBar = () => {
                 <h2>Social</h2>
                 <div className="top-actions">
                     <div className="points-badge">
-                        <span className="coin">60 ⭐</span>
-                        <span className="cash">₹0.00</span>
+                        <span className="coin">{user?.stars !== undefined ? user.stars : 60} ⭐</span>
+                        <span className="cash">₹{user?.money !== undefined ? user.money.toFixed(2) : '0.00'}</span>
                     </div>
                     <div className="icon-wrapper" onClick={toggleTheme} title="Toggle theme">
                         {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
                     </div>
-                    <div className="icon-wrapper badge-active">
+                    <div 
+                        className={`icon-wrapper ${hasUnread ? 'badge-active' : ''}`} 
+                        onClick={() => navigate('/notifications')} 
+                        title="Notifications"
+                        style={{ cursor: 'pointer' }}
+                    >
                         <Bell size={18} />
                     </div>
                     <button className="logout-btn" onClick={logout} title="Logout">

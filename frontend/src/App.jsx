@@ -7,6 +7,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import Feed from './pages/Feed/Feed';
+import Notifications from './pages/Notifications/Notifications';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -29,6 +30,7 @@ function AppRoutes() {
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
         <Route path="/" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
+        <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
       </Routes>
     </div>
   );

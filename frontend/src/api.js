@@ -118,3 +118,20 @@ export const sharePost = async (token, postId) => {
     if (!res.ok) throw new Error('Failed to share');
     return res.json();
 };
+
+export const fetchMe = async (token) => {
+    const res = await fetch(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) throw new Error('Failed to fetch user data');
+    return res.json();
+};
+
+export const readNotifications = async (token) => {
+    const res = await fetch(`${API_URL}/auth/notifications/read`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) throw new Error('Failed to mark notifications as read');
+    return res.json();
+};

@@ -24,8 +24,21 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
     };
 
+    const refreshUser = async () => {
+        if (!user?.token) return;
+        try {
+            const { fetchMe } = await import('../api');
+            const data = await fetchMe(user.token);
+            const mergedUser = { ...data, token: user.token };
+            setUser(mergedUser);
+            localStorage.setItem('user', JSON.stringify(mergedUser));
+        } catch (error) {
+            console.error('Context refresh error:', error);
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, loading, refreshUser }}>
             {children}
         </AuthContext.Provider>
     );
