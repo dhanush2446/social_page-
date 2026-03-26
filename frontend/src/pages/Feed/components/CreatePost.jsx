@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Camera, Smile, AlignLeft, Megaphone, X, Plus, Trash2 } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
+import toast from 'react-hot-toast';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 
@@ -8,7 +9,7 @@ const CreatePost = ({ onPostCreate, mainTab, setMainTab }) => {
     const { user } = useAuth();
     const { theme } = useTheme();
     const [text, setText] = useState('');
-    const [imagePreview, setImagePreview] = useState(null);
+    const [images, setImages] = useState([]);
     const [showEmoji, setShowEmoji] = useState(false);
     
     // Poll state
@@ -27,18 +28,34 @@ const CreatePost = ({ onPostCreate, mainTab, setMainTab }) => {
     const textareaRef = useRef(null);
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
+        const files = Array.from(e.target.files);
+        if (!files.length) return;
+
+        if (images.length + files.length > 4) {
+            toast.error("You can only attach up to 4 images per post.");
+            return;
+        }
+
+        files.forEach(file => {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImagePreview(reader.result);
+                setImages(prev => {
+                    if (prev.length >= 4) return prev;
+                    return [...prev, reader.result];
+                });
             };
             reader.readAsDataURL(file);
-        }
+        });
+        
+        if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
-    const handleRemoveImage = () => {
-        setImagePreview(null);
+    const handleRemoveImage = (index) => {
+        setImages(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const handleRemoveAllImages = () => {
+        setImages([]);
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
@@ -68,9 +85,9 @@ const CreatePost = ({ onPostCreate, mainTab, setMainTab }) => {
     const handleSubmit = () => {
         const hasPoll = showPoll && pollQuestion.trim() && pollOptions.filter(o => o.trim()).length >= 2;
         const hasPromo = showPromotion && promoTitle.trim() && promoLink.trim();
-        if (!text && !imagePreview && !hasPoll && !hasPromo) return;
+        if (!text && images.length === 0 && !hasPoll && !hasPromo) return;
 
-        const postData = { text, imageUrl: imagePreview };
+        const postData = { text, imageUrls: images };
         if (hasPoll) {
             postData.poll = {
                 question: pollQuestion.trim(),
@@ -89,7 +106,7 @@ const CreatePost = ({ onPostCreate, mainTab, setMainTab }) => {
 
         onPostCreate(postData);
         setText('');
-        setImagePreview(null);
+        setImages([]);
         setShowEmoji(false);
         setShowPoll(false);
         setPollQuestion('');
@@ -103,7 +120,7 @@ const CreatePost = ({ onPostCreate, mainTab, setMainTab }) => {
 
     const hasPollContent = showPoll && pollQuestion.trim() && pollOptions.filter(o => o.trim()).length >= 2;
     const hasPromoContent = showPromotion && promoTitle.trim() && promoLink.trim();
-    const isButtonDisabled = !text.trim() && !imagePreview && !hasPollContent && !hasPromoContent;
+    const isButtonDisabled = !text.trim() && images.length === 0 && !hasPollContent && !hasPromoContent;
 
     return (
         <div className="create-post-card">
@@ -139,17 +156,21 @@ const CreatePost = ({ onPostCreate, mainTab, setMainTab }) => {
                 )}
             </div>
 
-            {imagePreview && (
+            {images.length > 0 && (
                 <div className="image-preview-section">
                     <div className="images-header">
-                        <span>Selected Images (1/4)</span>
-                        <button className="remove-all" onClick={handleRemoveImage}>Remove All</button>
+                        <span>Selected Images ({images.length}/4)</span>
+                        <button className="remove-all" onClick={handleRemoveAllImages}>Remove All</button>
                     </div>
-                    <div className="image-thumbnail">
-                        <img src={imagePreview} alt="upload preview" />
-                        <button className="remove-btn" onClick={handleRemoveImage}>
-                            <X size={14} color="white" />
-                        </button>
+                    <div className="image-thumbnail-list" style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '8px 0' }}>
+                        {images.map((img, index) => (
+                            <div key={index} className="image-thumbnail" style={{ position: 'relative', minWidth: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden' }}>
+                                <img src={img} alt={`upload preview ${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <button className="remove-btn" onClick={() => handleRemoveImage(index)} style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.6)', borderRadius: '50%', padding: '4px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <X size={14} color="white" />
+                                </button>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
@@ -225,12 +246,13 @@ const CreatePost = ({ onPostCreate, mainTab, setMainTab }) => {
                         type="file" 
                         accept="image/*" 
                         hidden 
+                        multiple
                         ref={fileInputRef} 
                         onChange={handleImageChange}
                     />
-                    <button className="icon-btn" onClick={() => fileInputRef.current.click()} title="Add image">
+                    <button className="icon-btn" onClick={() => fileInputRef.current.click()} title="Add images">
                         <Camera size={20} className="text-primary" />
-                        {imagePreview && <span className="badge">1</span>}
+                        {images.length > 0 && <span className="badge">{images.length}</span>}
                     </button>
                     <button className="icon-btn" onClick={() => setShowEmoji(!showEmoji)} title="Add emoji">
                         <Smile size={20} className={showEmoji ? 'text-primary' : ''} style={{ color: showEmoji ? 'var(--primary-color)' : 'var(--text-secondary)' }} />

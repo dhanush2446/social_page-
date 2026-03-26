@@ -18,9 +18,9 @@ router.get('/', async (req, res) => {
 // @route   POST /api/posts
 router.post('/', protect, async (req, res) => {
     try {
-        const { text, imageUrl, poll, promotion } = req.body;
+        const { text, imageUrl, imageUrls, poll, promotion } = req.body;
         
-        if (!text && !imageUrl && !poll && !promotion) {
+        if (!text && !imageUrl && (!imageUrls || imageUrls.length === 0) && !poll && !promotion) {
             return res.status(400).json({ message: 'Post must contain text, an image, a poll, or a promotion' });
         }
 
@@ -30,7 +30,8 @@ router.post('/', protect, async (req, res) => {
             authorHandle: req.user.handle,
             authorAvatar: req.user.avatarUrl,
             text,
-            imageUrl
+            imageUrl,
+            imageUrls: imageUrls || []
         };
 
         if (poll && poll.question && poll.options && poll.options.length >= 2) {

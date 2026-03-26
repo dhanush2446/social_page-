@@ -7,6 +7,7 @@ const postSchema = new mongoose.Schema({
     authorAvatar: { type: String, default: '' },
     text: { type: String },
     imageUrl: { type: String },
+    imageUrls: [{ type: String }],
     likes: [{ type: String }],
     comments: [{
         username: { type: String },

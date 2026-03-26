@@ -155,9 +155,21 @@ const PostCard = ({ post, onLike, onComment, onDeleteComment, onDelete, onFollow
 
             <div className="post-content">
                 {post.text && <p className="post-text">{post.text}</p>}
-                {post.imageUrl && (
+                {/* Legacy single image fallback */}
+                {post.imageUrl && (!post.imageUrls || post.imageUrls.length === 0) && (
                     <div className="post-image-wrapper">
                         <img src={post.imageUrl} alt="post content" className="post-image" />
+                    </div>
+                )}
+
+                {/* Multiple images grid */}
+                {post.imageUrls && post.imageUrls.length > 0 && (
+                    <div className={`post-images-grid grid-${Math.min(post.imageUrls.length, 4)}`}>
+                        {post.imageUrls.slice(0, 4).map((url, idx) => (
+                            <div key={idx} className="post-image-wrapper">
+                                <img src={url} alt={`post content ${idx}`} className="post-image" />
+                            </div>
+                        ))}
                     </div>
                 )}
 
