@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        const uri = process.env.MONGO_URI || process.env.MONGO_URL;
+        const uri = process.env.MONGO_URI || process.env.MONGO_URL || process.env.MONGODB_URI;
 
         if (!uri) {
             throw new Error('CRITICAL FATAL: You definitely did NOT add MONGO_URI to the Render Environment Variables tab! It is completely missing!');
